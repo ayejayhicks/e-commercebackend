@@ -12,8 +12,8 @@ Lately I have been overwhelmed with the amount of files that we are given for on
 
 ## Technologies Used  
 Express.js  
-Node.js
-MySQL
+Node.js  
+MySQL  
 Sequelize
 
 ---
