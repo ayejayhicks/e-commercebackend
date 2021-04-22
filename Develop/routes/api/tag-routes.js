@@ -8,7 +8,8 @@ router.get('/', (req, res) => {
   // be sure to include its associated Product data
 Tag.findAll({
     include: {
-      model: Product
+      model: Product,
+      attributes: ['id', 'product_name', 'price', 'stock', 'category_id'],
     }
   })
 .then(tagData => res.json(tagData))
@@ -25,15 +26,24 @@ router.get('/:id', (req, res) => {
         id: req.params.id
       },
       include: {
-        model: Product
+        model: Product,
+        attributes: ['id', 'product_name', 'price', 'stock', 'category_id'],
       }
     })
-  .then(tagData => res.json(tagData))
+  .then(tagData => {
+    if (!tagData) {
+      res.status(404).json({ message: 'No tag found with this id'});
+      return;
+    }
+    res.json(tagData);
+  })
   .catch(err => {
     console.log(err);
     res.status(500).json(err);
   });
 });
+
+
 
 router.post('/', (req, res) => {
   // create a new tag
@@ -49,15 +59,11 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
-    Tag.update(
-      {
-        tag_name: req.body.tag_name
-      },
-      {
-        where: {
-          id: req.params.id
-        }
-      })
+    Tag.update(req.body, {
+      where: {
+        id: req.params.id
+      }
+    })
       .then(tagData => {
         if (!tagData) {
           res.status(404).json({ message: 'No Tag found with that ID.' });
